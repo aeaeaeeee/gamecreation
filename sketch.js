@@ -12,6 +12,7 @@ var obstaclegroup, obstacle, obsImg;
 var gameover, gameoverImg;
 var score=0;
 
+var lifeTime;
 
 function preload(){
   backImage=loadImage("ground.png");
@@ -25,7 +26,7 @@ function preload(){
 function setup() {
   createCanvas(1200,500);
   
-  backgr=createSprite(1200,450,1500,40);
+  backgr=createSprite(1200,580,1500,40);
   backgr.addImage(backImage);
   backgr.scale=2;
   backgr.x=backgr.width/2;
@@ -36,7 +37,7 @@ function setup() {
   player.addAnimation("collided",collided);
   player.scale = 1;
   
-  ground = createSprite(400,300,1600,10);
+  ground = createSprite(400,450,1600,10);
   ground.x=ground.width/2;
   ground.visible=false;
 
@@ -61,8 +62,8 @@ function draw() {
 
     gameover.visible = false;
 
-    
-    if(backgr.x<500){
+  
+    if(backgr.x<200){
       backgr.x=backgr.width/2;
     }
     
@@ -73,14 +74,12 @@ function draw() {
       player.velocityY = player.velocityY + 0.9;
     
       player.collide(ground);
-      //spawnObstacles();
+      spawnObstacles();
    
-      /*if(obstaclegroup.isTouching(player)){ 
-          player.scale=0.2;
-        score = score - 2;
+      if(obstaclegroup.isTouching(player)){ 
         gamestate=end;
       }
-       */
+       
    }
 
    else if (gamestate===end){
@@ -100,5 +99,19 @@ function draw() {
       }
    }
 
+   if(frameCount % 60 === 0)
+    {
+    spawnObstacles();
+    }
   drawSprites();
+}
+
+function spawnObstacles()
+{
+  obstacle = createSprite(1100, 430);
+  obstacle.velocityX = -(6 + 2*score/150);
+  obstacle.scale = 0.01;
+  obstacle.addImage(obsImg);
+  obstacle.setLifetime=170;
+  obstaclegroup.add(obstacle);
 }

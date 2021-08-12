@@ -17,7 +17,7 @@ var lifeTime;
 function preload(){
   backImage=loadImage("ground.png");
   running = loadAnimation("boy1.png","boy2.png","boy3.png","boy4.png", "boy5.png", "boy6.png","boy7.png","boy8.png");
-  collided=loadAnimation("boy9.png","boy10.png");
+  collided=loadAnimation("boy9.png");
   
   obsImg = loadImage("bear_trap.png"); 
   //gameoverImg = loadImage("");
@@ -32,7 +32,7 @@ function setup() {
   backgr.x=backgr.width/2;
   backgr.velocityX=-4;
   
-  player = createSprite(100,290,20,50);
+  player = createSprite(100,440,20,50);
   player.addAnimation("running",running);
   player.addAnimation("collided",collided);
   player.scale = 1;
@@ -57,7 +57,10 @@ function setup() {
 function draw() {
   
   background(0);
-  
+  fill("white");
+  textSize(20);
+  text("Score: " + score, 100, 50)
+
    if (gamestate===play) {
 
     gameover.visible = false;
@@ -67,11 +70,14 @@ function draw() {
       backgr.x=backgr.width/2;
     }
     
-      if(keyDown("space") && (player.y>=200) ) {
+      if(keyDown("space") && (player.y>=370) ) {
         player.velocityY = -10;
       }
+      
+      backgr.velocityX = -(4+score/100);
+      score = score + Math.round(frameCount/60);
 
-      player.velocityY = player.velocityY + 0.9;
+      player.velocityY = player.velocityY + 1;
     
       player.collide(ground);
       spawnObstacles();
@@ -100,18 +106,21 @@ function draw() {
    }
 
    if(frameCount % 60 === 0)
-    {
+
     spawnObstacles();
-    }
+
   drawSprites();
 }
 
 function spawnObstacles()
 {
+  if(frameCount % 60 === 0)
+  {
   obstacle = createSprite(1100, 430);
   obstacle.velocityX = -(6 + 2*score/150);
-  obstacle.scale = 0.01;
+  obstacle.scale = 0.015;
   obstacle.addImage(obsImg);
   obstacle.setLifetime=170;
   obstaclegroup.add(obstacle);
+  }
 }
